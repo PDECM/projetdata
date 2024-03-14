@@ -27,7 +27,7 @@ def run():
 
     st.write("# AuBoulot.fr")
 
-    contrat = st.multiselect('Type de contrat', ["CDD","CDI","Intérim","Stage","Apprentissage","Contrat pro","Indépendant"])
+    contrat = st.selectbox('Type de contrat', ["","CDD","CDI","Intérim","Stage","Apprentissage","Contrat pro","Indépendant"])
 
     experience = st.selectbox('Expérience', ["","Débutant", "1 an et plus", "3 ans et plus", "5 ans et plus"])
         
@@ -39,13 +39,13 @@ def run():
 
     salaire = st.selectbox('Salaire', ["","1666,67+/mois","2083,33+/mois","2500,00+/mois","2916,67+/mois","3750,00+/mois"])
 
-    secteur = st.multiselect('Secteur', ["Ressources humaines et recrutement","Santé","Commerce de détail et de gros","Services aux particuliers",
-                                         "Informatique","Gouvernement et administration publique","Enseignement et formation","Management et conseil aux entreprises",
-                                         "ONG et associations à but non lucratif","Industrie manufacturière","Finance",
-                                         "Services de construction, réparation et maintenance","Restauration","Énergie et exploitation des ressources naturelles",
-                                         "Aérospatiale et défense","Assurance","Transport de biens et de personnes","Médias et communication","Télécommunications",
-                                         "Immobilier","Hôtellerie et tourisme","Pharmaceutique et biotechnologie","Arts, divertissement et loisirs","Juridique",
-                                         "Agriculture"])
+       # secteur = st.multiselect('Secteur', ["Ressources humaines et recrutement","Santé","Commerce de détail et de gros","Services aux particuliers",
+       #                                      "Informatique","Gouvernement et administration publique","Enseignement et formation","Management et conseil aux entreprises",
+       #                                      "ONG et associations à but non lucratif","Industrie manufacturière","Finance",
+       #                                      "Services de construction, réparation et maintenance","Restauration","Énergie et exploitation des ressources naturelles",
+       #                                      "Aérospatiale et défense","Assurance","Transport de biens et de personnes","Médias et communication","Télécommunications",
+       #                                      "Immobilier","Hôtellerie et tourisme","Pharmaceutique et biotechnologie","Arts, divertissement et loisirs","Juridique",
+       #                                      "Agriculture"])
 
     horaires = st.selectbox('Horaires', ["","Temps plein","Temps partiel","Week-end uniquement","Travail de nuit"])
     
@@ -55,7 +55,7 @@ def run():
                 'Type de contrat': contrat,
                 'Expérience': experience,
                 'Salaire': salaire,
-                'Secteur': secteur,
+        #        'Secteur': secteur,
                 'Horaires': horaires
             }
             
