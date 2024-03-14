@@ -63,6 +63,8 @@ def run():
             st.write(user_inputs)
             data = pd.read_json("BDD.json", lines=False)
             data2 = pd.DataFrame(data)
+            df = data2[data2["typeContrat"]==user_inputs["Type de contrat"]]
+            st.write(df)
 
 
 if __name__ == "__main__":
