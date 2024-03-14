@@ -19,6 +19,8 @@ LOGGER = get_logger(__name__)
 
 
 def run():
+    data = pd.read_json("BDD.json", lines=False)
+    data2 = pd.DataFrame(data)
     
     st.set_page_config(
         page_title="Hello",
@@ -61,8 +63,7 @@ def run():
             
             # Affichage du dictionnaire
             st.write(user_inputs)
-            data = pd.read_json("BDD.json", lines=False)
-            data2 = pd.DataFrame(data)
+    
             df = data2[data2["typeContrat"]==user_inputs["Type de contrat"]]
             st.write(df)
 
