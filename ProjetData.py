@@ -55,7 +55,7 @@ def run():
                 'Type de contrat': contrat,
                 'Expérience': experience,
                 'Salaire': salaire,
-        #        'Secteur': secteur,
+            #        'Secteur': secteur,
                 'Horaires': horaires
             }
             
