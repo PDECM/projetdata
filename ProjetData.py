@@ -336,11 +336,11 @@ def run():
             # Création du dictionnaire des entrées
             user_inputs = {
                 'valnumcoderome' : secteur,
-                'ValNumCodeNaf' : code_NAF
+                'ValNumCodeNaf' : code_NAF,
                 'ValNumTypeContrat': contrat,
                 'ValNumExp': experience,
                 'ValNumSalaire': salaire,
-                'ValNumDureeTravail': horaires
+                'ValNumDureeTravail': horaires,
                 'ValNumqualificationCode':Qualification_code
 
             }
