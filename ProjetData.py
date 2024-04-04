@@ -323,38 +323,28 @@ def run():
 
     st.write("# AuBoulot.fr")
 
-    contrat = st.selectbox('Type de contrat', ["","CDD","CDI","Intérim","Stage","Apprentissage","Contrat pro","Indépendant"])
+    secteur_data = pd.read_excel('Correspondance_coderome.xlsx')
+    secteur = st.multiselect('Intitulé du poste', np.array(secteur_data['RomeLib']).tolist())
+    code_NAF = st.text_input('Code NAF')
+    contrat = st.selectbox('Type de contrat', ["CDD","CDI","MIS","DIN"])
+    experience = st.number_input('Expérience en année (ex: 2.5)')
+    salaire = st.number_input('Salaire mensuel en euro (ex:2000)')
+    horaires = st.number_input('Nombre d'heure par semaine (ex:35)')
+    Qualification_code = st.number_input('Score qualification de 1 à 6 ( 1 peu qualifié ---- 6 hautement qualifié ',step = 1)
 
-    experience = st.selectbox('Expérience', ["","Débutant", "1 an et plus", "3 ans et plus", "5 ans et plus"])
-        
-        #code_postal = st.text_input('Code Postal')
-    
-        #duree_publication = st.selectbox('Durée de publication', ["","Dernières 24h","Dernires 3j","Dernière semaine","Dernier mois"])
-    
-        #teletravail = st.selectbox('Télétravail', ["","Télétravail possible" ,"Téletravail partiel possible"])
-
-    salaire = st.selectbox('Salaire', ["","1666,67+/mois","2083,33+/mois","2500,00+/mois","2916,67+/mois","3750,00+/mois"])
-
-       # secteur = st.multiselect('Secteur', ["Ressources humaines et recrutement","Santé","Commerce de détail et de gros","Services aux particuliers",
-       #                                      "Informatique","Gouvernement et administration publique","Enseignement et formation","Management et conseil aux entreprises",
-       #                                      "ONG et associations à but non lucratif","Industrie manufacturière","Finance",
-       #                                      "Services de construction, réparation et maintenance","Restauration","Énergie et exploitation des ressources naturelles",
-       #                                      "Aérospatiale et défense","Assurance","Transport de biens et de personnes","Médias et communication","Télécommunications",
-       #                                      "Immobilier","Hôtellerie et tourisme","Pharmaceutique et biotechnologie","Arts, divertissement et loisirs","Juridique",
-       #                                      "Agriculture"])
-
-    horaires = st.selectbox('Horaires', ["","Temps plein","Temps partiel","Week-end uniquement","Travail de nuit"])
-    
     if st.button('Valider'):
             # Création du dictionnaire des entrées
             user_inputs = {
-                'Type de contrat': contrat,
-                'Expérience': experience,
-                'Salaire': salaire,
-            #        'Secteur': secteur,
-                'Horaires': horaires
+                'valnumcoderome' : secteur,
+                'ValNumCodeNaf' : code_NAF
+                'ValNumTypeContrat': contrat,
+                'ValNumExp': experience,
+                'ValNumSalaire': salaire,
+                'ValNumDureeTravail': horaires
+                'ValNumqualificationCode':Qualification_code
+
             }
-            
+
             # Affichage du dictionnaire
             data2 = prerun(user_inputs)
             df = data2[data2["typeContrat"]==user_inputs["Type de contrat"]]
