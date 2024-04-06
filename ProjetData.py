@@ -283,6 +283,28 @@ def prerun(criteres_choisis,testing_offre,Top_actu_base):
     return data_finale
 
 def run():
+    
+    def calculate_val_num_code_naf(code_naf):
+      try:
+        parts = code_naf.split('.')
+        left_part = int(parts[0]) * 10**4
+        middle_part = int(parts[1][:2]) * 10**2
+        right_part = ord(parts[1][2]) - ord('A') + 1
+        return left_part + middle_part + right_part
+      except Exception as e:
+          return 0
+
+    def numerisation_typeContrat(typeContrat):
+      if typeContrat=='CDI':
+        return(0)
+      elif typeContrat=='CDD':
+        return(1)
+      elif typeContrat=='MIS':
+        return(2)
+      elif typeContrat=='DIN':
+        return(3)
+
+    
     st.set_page_config(
         page_title="Bienvenue à la carte des offres ! (un 20/20 svp )",
         page_icon="👋",
@@ -291,7 +313,7 @@ def run():
     st.write("# AuBoulot.fr")
     Top_actu_base = st.selectbox('Voudriez-vous actualiser la base de données ? ',["Oui","Non"])
     secteur_data = pd.read_excel('Correspondance_coderome.xlsx')
-    secteur = st.multiselect('Intitulé du poste', np.array(secteur_data['RomeLib']).tolist())
+    secteur = st.selectbox('Intitulé du poste', np.array(secteur_data['RomeLib']).tolist())
     code_NAF = st.text_input('Code NAF (ex:49.32Z)')
     contrat = st.selectbox('Type de contrat', ["CDD","CDI","MIS","DIN"])
     experience = st.number_input('Expérience en année (ex: 2.5)')
@@ -305,9 +327,9 @@ def run():
       testing_offre = []
 
       correspondance_table = pd.read_excel('Correspondance_coderome.xlsx')
-      rome_code = correspondance_table.loc[correspondance_table.RomeLib == secteur[0], 'Codes'].iloc[0] 
+      rome_code = correspondance_table.loc[correspondance_table.RomeLib == secteur, 'Codes'].iloc[0] 
       criteres_choisis.append('valnumcoderome')
-      testing_offre.append(secteur[0])
+      testing_offre.append(secteur)
 
       if code_NAF != "" :
         criteres_choisis.append('ValNumCodeNaf')
