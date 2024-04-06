@@ -305,10 +305,9 @@ def run():
       testing_offre = []
 
       correspondance_table = pd.read_excel('Correspondance_coderome.xlsx')
-      print(type(secteur))
-      rome_code = correspondance_table.loc[correspondance_table.RomeLib == secteur, 'Codes'].iloc[0] 
+      rome_code = correspondance_table.loc[correspondance_table.RomeLib == secteur[0], 'Codes'].iloc[0] 
       criteres_choisis.append('valnumcoderome')
-      testing_offre.append(secteur)
+      testing_offre.append(secteur[0])
 
       if code_NAF != "" :
         criteres_choisis.append('ValNumCodeNaf')
