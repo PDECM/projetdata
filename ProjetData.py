@@ -85,6 +85,7 @@ def prerun(criteres_choisis,testing_offre,Top_actu_base):
         except Exception as e:
             print(f"Une erreur s'est produite lors de la requête GET : {str(e)}")
             return pd.DataFrame()
+    #Possibilité d'actualiser la base de données depuis l'API FranceTravail
     if Top_actu_base == "Oui":
       # Obtenir le token
       access_token = get_access_token()
@@ -312,11 +313,11 @@ def run():
     )
 
     st.write("# AuBoulot.fr")
-    Top_actu_base = st.selectbox('Voudriez-vous actualiser la base de données ? ',["Oui","Non"])
+    Top_actu_base = st.selectbox('Voudriez-vous actualiser la base de données ? ',["Non","Oui"])
     secteur_data = pd.read_excel('Correspondance_coderome.xlsx')
     secteur = st.selectbox('Intitulé du poste', np.array(secteur_data['RomeLib']).tolist())
     code_NAF = st.text_input('Code NAF (ex:49.32Z)')
-    contrat = st.selectbox('Type de contrat', ["CDD","CDI","MIS","DIN"])
+    contrat = st.selectbox('Type de contrat', ["CDI","CDD","MIS","DIN"])
     experience = st.number_input('Expérience en année (ex: 2.5)')
     salaire = st.number_input('Salaire mensuel en euro (ex:2000)')
     horaires = st.number_input("Nombre d'heure par semaine (ex:35)")
