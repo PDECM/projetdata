@@ -15,6 +15,7 @@
 import streamlit as st
 from streamlit.logger import get_logger
 from sklearn.neighbors import NearestNeighbors
+import pydeck as pdk
 
 import pandas as pd
 import requests
@@ -361,7 +362,38 @@ def run():
       data2 = prerun(criteres_choisis,testing_offre,Top_actu_base)
       st.write(data2.head(20))
       #data2.to_json('test_table_js.json', orient='records')
-      
+
+      data2 = data2.rename(columns={"lieuTravail.longitude": "lon","lieuTravail.latitude": "lat"})
+      data3 = data2[['lon','lat']]
+        
+      st.pydeck_chart(pdk.Deck(
+            map_style=None,
+            initial_view_state=pdk.ViewState(
+                latitude=46.84,
+                longitude=2.35,
+                zoom=5,
+                pitch=50,
+            ),
+            layers=[
+                pdk.Layer(
+                   'HexagonLayer',
+                   data=data3,
+                   get_position='[lon, lat]',
+                   radius=3000,
+                   elevation_scale=10,
+                   elevation_range=[0, 1000],
+                   pickable=True,
+                   extruded=True,
+                ),
+                pdk.Layer(
+                    'ScatterplotLayer',
+                    data=data3,
+                    get_position='[lon, lat]',
+                    get_color='[200, 30, 0, 160]',
+                    get_radius=3000,
+                ),
+            ],
+        ))
 
 
 if __name__ == "__main__":
