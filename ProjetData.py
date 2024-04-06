@@ -280,7 +280,7 @@ def prerun(criteres_choisis,testing_offre,Top_actu_base):
     table_finale_export = table_finale_export.reset_index(drop = True)
     data_finale = table_finale_export.dropna(subset = ['lieuTravail.latitude', 'lieuTravail.longitude'], inplace=True)
 
-    return data_finale
+    return result_df
 
 def run():
     
@@ -359,9 +359,9 @@ def run():
 
       # Affichage du dictionnaire
       data2 = prerun(criteres_choisis,testing_offre,Top_actu_base)
-      st.write(data2)
+      st.write(data2.head())
       #data2.to_json('test_table_js.json', orient='records')
-      st.write(data2[["intitule","entreprise.nom","typeContrat","origineOffre.urlOrigine","scoring"]])
+      #st.write(data2[["intitule","entreprise.nom","typeContrat","origineOffre.urlOrigine","scoring"]])
 
 
 if __name__ == "__main__":
