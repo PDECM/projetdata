@@ -85,6 +85,8 @@ def prerun(criteres_choisis,testing_offre,Top_actu_base):
         except Exception as e:
             print(f"Une erreur s'est produite lors de la requête GET : {str(e)}")
             return pd.DataFrame()
+
+    
     #Possibilité d'actualiser la base de données depuis l'API FranceTravail
     if Top_actu_base == "Oui":
       # Obtenir le token
@@ -110,23 +112,27 @@ def prerun(criteres_choisis,testing_offre,Top_actu_base):
 
           # Mettre à jour la date de début pour la prochaine itération
           start_date = next_date
+    #Possibilité d'utiliser une base de données stockée dans le github pour réduire le temps d'exécution
     else:
       result_df = pd.read_excel('result_df_excel.xlsx')
 
     #Data Analysis
+
+    #1. Numérisation du Code Rome pour le transformer en une variable numérique continue: 2 valeurs proches --> 2 postes similaires
     def calculate_code(row):
         rome_code = str(row['romeCode'])
         appellation_libelle = str(row['appellationlibelle'])
 
-        left_part = ord(rome_code[0]) * 10**7
-        middle_part = int(rome_code[-4:]) * 10**3
-        right_part = ord(appellation_libelle[0])
+        left_part = ord(rome_code[0]) * 10**7   #Famille secteur
+        middle_part = int(rome_code[-4:]) * 10**3  #Secteur
+        right_part = ord(appellation_libelle[0])   #Sous-secteur
 
         return left_part + middle_part + right_part
 
     # Appliquer la fonction à chaque ligne du DataFrame
     result_df['valnumcoderome'] = result_df.apply(calculate_code, axis=1)
 
+    #2. Numérisation Code NAF, même logique que le code ROME
     def calculate_val_num_code_naf(code_naf):
       try:
         parts = code_naf.split('.')
@@ -140,6 +146,7 @@ def prerun(criteres_choisis,testing_offre,Top_actu_base):
     # Appliquer la fonction à la colonne 'codeNAF' et assigner le résultat à une nouvelle colonne 'ValNumCodeNaf'
     result_df['ValNumCodeNaf'] = result_df['codeNAF'].apply(calculate_val_num_code_naf)
 
+    #3. Numérisation du type de contract
     def numerisation_typeContrat(typeContrat):
       if typeContrat=='CDI':
         return(0)
@@ -153,6 +160,7 @@ def prerun(criteres_choisis,testing_offre,Top_actu_base):
     # Appliquer la fonction à la colonne 'typeContrat' et assigner le résultat à une nouvelle colonne 'ValNumTypeContrat'
     result_df['ValNumTypeContrat'] = result_df['typeContrat'].apply(numerisation_typeContrat)
 
+    #4.Numérisation de l'expérience et conversion en année
     def numerisation_exp(experienceLibelle):
       try:
         parts = experienceLibelle.split(' ')
@@ -170,8 +178,10 @@ def prerun(criteres_choisis,testing_offre,Top_actu_base):
     # Appliquer la fonction à la colonne 'experienceLibelle' et assigner le résultat à une nouvelle colonne 'ValNumExperienceLibelle'
     result_df['ValNumExp'] = result_df['experienceLibelle'].apply(numerisation_exp)
 
+    #5.Numérisation du salaire et conversion en mensuel
     def numerisation_salaire(salaire):
       try:
+        # Les différents cas de figures d'un salaire non rempli
         if type(salaire) == float or salaire =='De' or salaire =='Annuel de' or salaire == 'Mensuel de':
           return 0
         else:
@@ -212,6 +222,7 @@ def prerun(criteres_choisis,testing_offre,Top_actu_base):
     # Appliquer la fonction à la colonne 'salaire.libelle' et assigner le résultat à une nouvelle colonne 'ValNumSalaire'
     result_df['ValNumSalaire'] = result_df['salaire.libelle'].apply(numerisation_salaire)
 
+    #6.Numérisation de la durée de travail (heures par semaine)
     def calculate_dureetravailibelle(dureeTravailLibelle):
         if type(dureeTravailLibelle) != float:
             # Supprime les espaces avant et après la chaîne
@@ -257,27 +268,34 @@ def prerun(criteres_choisis,testing_offre,Top_actu_base):
     # Appliquer la fonction à la colonne 'dureeTravailLibelle' et assigner le résultat à une nouvelle colonne 'ValNumDureeTravail'
     result_df['ValNumDureeTravail'] = result_df['dureeTravailLibelle'].apply(calculate_dureetravailibelle)
 
-    train_df = result_df
-    train_df['ValNumCodeNaf'] = train_df['ValNumCodeNaf'] * 10
-    train_df['ValNumExp'] = train_df['ValNumExp']*10**6
-    train_df['ValNumTypeContrat'] = train_df['ValNumTypeContrat']*10**6
-    train_df['ValNumDureeTravail'] = train_df['ValNumDureeTravail']*10**5
-    train_df['qualificationCode'].fillna(0, inplace=True)
-    train_df['ValNumqualificationCode'] = train_df['qualificationCode']*10**6
-    train_df['ValNumSalaire'] =train_df['ValNumSalaire'] * 10** 2
 
-    Nb_voisins = 150      #  user_entry
+    #Application manuelle des poids pour mettre en valeur certains critères :  
+    train_df = result_df
+    
+    #code Rome : ordre de 10^10 pour secteur famille , 10^8 pour le secteur , 10^7 sous secteur 
+    train_df['ValNumCodeNaf'] = train_df['ValNumCodeNaf'] * 10  #ordre 10^7
+    train_df['ValNumExp'] = train_df['ValNumExp']*10**6   #ordre 10^7
+    train_df['ValNumTypeContrat'] = train_df['ValNumTypeContrat']*10**6   #ordre 10^7
+    train_df['ValNumDureeTravail'] = train_df['ValNumDureeTravail']*10**5 #ordre 10^7
+    train_df['qualificationCode'].fillna(0, inplace=True) #ordre 10^7
+    train_df['ValNumqualificationCode'] = train_df['qualificationCode']*10**6
+    train_df['ValNumSalaire'] =train_df['ValNumSalaire'] * 10** 2 #ordre 10^7
+
+    Nb_voisins = 150      # Peut être utils pour des futurs extensions
 
     train_df = train_df.loc[:,criteres_choisis]
     train_df.fillna(0, inplace=True)
 
+    #Recherche des offres les plus proches aux critères de l'utilisateur
     nn_model = NearestNeighbors(n_neighbors= Nb_voisins, algorithm='auto', metric='euclidean')
     nn_model.fit(train_df)
 
+    #Sélection des offres les plus proches par ordre décroissant des distances
     distances, indices_neighbors = nn_model.kneighbors(testing_offre)
-
     table_finale = result_df.iloc[indices_neighbors[0],:]
     table_finale['scoring'] = np.round((1-np.sqrt(distances[0]/np.linalg.norm(np.array(testing_offre))))*100 ,2)
+
+    #Récuperation des informations complémentaires des offres
     table_finale_export = table_finale[['intitule','description','lieuTravail.latitude','lieuTravail.longitude','entreprise.nom','typeContrat','origineOffre.urlOrigine','scoring']]
     table_finale_export = table_finale_export.reset_index(drop = True)
     #data_finale = table_finale_export.dropna(subset = ['lieuTravail.latitude', 'lieuTravail.longitude'], inplace=True)
@@ -312,6 +330,7 @@ def run():
         page_icon="👋",
     )
 
+    #Saisie des paramètres et des critères par l'utilisateur
     st.write("# AuBoulot.fr")
     Top_actu_base = st.selectbox('Voudriez-vous actualiser la base de données ? ',["Non","Oui"])
     secteur_data = pd.read_excel('Correspondance_coderome.xlsx')
@@ -324,27 +343,30 @@ def run():
     Qualification_code = st.number_input('Score qualification de 1 à 6 ( 1 peu qualifié ---- 6 hautement qualifié) ',step = 1)
 
     if st.button('Valider'):
-      # Création du dictionnaire des entrées
+      # Création et transformation de la liste des entrées, si un critère n'est pas rentré, il ne sera pas pris en compte dans le modèle
       criteres_choisis = []
       testing_offre = []
 
+      #Code Rome ( Obligatoire )
       correspondance_table = pd.read_excel('Correspondance_coderome.xlsx')
       rome_code = correspondance_table.loc[correspondance_table.RomeLib == secteur, 'Codes'].iloc[0] 
       criteres_choisis.append('valnumcoderome')
       testing_offre.append(rome_code)
 
+    # Code NAF ( optionnel )
       if code_NAF != "" :
         criteres_choisis.append('ValNumCodeNaf')
         testing_offre.append(calculate_val_num_code_naf(code_NAF)*10)
 
-
+    # Type de contrat ( obligatoire )
       criteres_choisis.append('ValNumTypeContrat')
       testing_offre.append(numerisation_typeContrat(contrat)*10**6)
 
-
+    # Expérience ( optionnelle par défaut 0 )
       criteres_choisis.append('ValNumExp')
       testing_offre.append((experience)*10**6)
 
+    #Salaire ( optionnel )
       if salaire != 0 :
         criteres_choisis.append('ValNumSalaire')
         testing_offre.append((salaire)*10**2)
@@ -359,12 +381,15 @@ def run():
 
       testing_offre = np.array(testing_offre).reshape(1,-1)
 
-      # Affichage du dictionnaire
+      # Appel au modèle et Récupération de la offres similaires
       data2 = prerun(criteres_choisis,testing_offre,Top_actu_base)
-      st.write(data2.head(20))
+
+    #Affichage de la table avec les 150 offres les plus proches
+      st.write(data2)
       #data2.to_json('test_table_js.json', orient='records')
 
-      data2 = data2.rename(columns={"lieuTravail.longitude": "lon","lieuTravail.latitude": "lat"})
+   #Affichage de la position des offres sur une carte
+        data2 = data2.rename(columns={"lieuTravail.longitude": "lon","lieuTravail.latitude": "lat"})
       data3 = data2[['lon','lat']]
         
       st.pydeck_chart(pdk.Deck(
