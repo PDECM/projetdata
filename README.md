@@ -20,4 +20,4 @@ Pour se connecter sur streamlit un mail vous serez envoyer sur la boite mail Pro
 
 En lançant l'application, vous voyez l'interface que nous avons créé. Nous avons apporté quelques améliorations après la présentation, nous avons introduit plus de champs pour rafiner encore plus la recherche de l'utilisateur. 
 
-Vous trouvez dans le git la vidéo que nous avons présenté lors de la soutenance pour la démonstration. 
+Nous vous communiquons la vidéo que nous avons présenté lors de la soutenance pour la démonstration. 
