@@ -278,9 +278,9 @@ def prerun(criteres_choisis,testing_offre,Top_actu_base):
     table_finale['scoring'] = np.round((1-np.sqrt(distances[0]/np.linalg.norm(np.array(testing_offre))))*100 ,2)
     table_finale_export = table_finale[['intitule','description','lieuTravail.latitude','lieuTravail.longitude','entreprise.nom','typeContrat','origineOffre.urlOrigine','scoring']]
     table_finale_export = table_finale_export.reset_index(drop = True)
-    data_finale = table_finale_export.dropna(subset = ['lieuTravail.latitude', 'lieuTravail.longitude'], inplace=True)
+    #data_finale = table_finale_export.dropna(subset = ['lieuTravail.latitude', 'lieuTravail.longitude'], inplace=True)
 
-    return data_finale
+    return table_finale_export
 
 def run():
     
