@@ -280,7 +280,7 @@ def prerun(criteres_choisis,testing_offre,Top_actu_base):
     table_finale_export = table_finale_export.reset_index(drop = True)
     data_finale = table_finale_export.dropna(subset = ['lieuTravail.latitude', 'lieuTravail.longitude'], inplace=True)
 
-    return train_df
+    return table_finale
 
 def run():
     
