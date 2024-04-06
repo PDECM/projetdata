@@ -358,8 +358,8 @@ def run():
       testing_offre = np.array(testing_offre).reshape(1,-1)
 
       # Affichage du dictionnaire
-      st.write(testing_offre) 
       data2 = prerun(criteres_choisis,testing_offre,Top_actu_base)
+      st.write(data2)
       #data2.to_json('test_table_js.json', orient='records')
       st.write(data2[["intitule","entreprise.nom","typeContrat","origineOffre.urlOrigine","scoring"]])
 
