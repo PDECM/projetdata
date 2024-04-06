@@ -296,7 +296,7 @@ def run():
     contrat = st.selectbox('Type de contrat', ["CDD","CDI","MIS","DIN"])
     experience = st.number_input('Expérience en année (ex: 2.5)')
     salaire = st.number_input('Salaire mensuel en euro (ex:2000)')
-    horaires = st.number_input('Nombre d'heure par semaine (ex:35)')
+    horaires = st.number_input("Nombre d'heure par semaine (ex:35)")
     Qualification_code = st.number_input('Score qualification de 1 à 6 ( 1 peu qualifié ---- 6 hautement qualifié ',step = 1)
 
     if st.button('Valider'):
