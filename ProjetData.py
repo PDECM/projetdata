@@ -84,7 +84,7 @@ def prerun(criteres_choisis,testing_offre,Top_actu_base):
         except Exception as e:
             print(f"Une erreur s'est produite lors de la requête GET : {str(e)}")
             return pd.DataFrame()
-    if Top_actu_base = "Oui":
+    if Top_actu_base == "Oui":
       # Obtenir le token
       access_token = get_access_token()
 
