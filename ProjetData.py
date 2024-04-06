@@ -319,7 +319,7 @@ def run():
     experience = st.number_input('Expérience en année (ex: 2.5)')
     salaire = st.number_input('Salaire mensuel en euro (ex:2000)')
     horaires = st.number_input("Nombre d'heure par semaine (ex:35)")
-    Qualification_code = st.number_input('Score qualification de 1 à 6 ( 1 peu qualifié ---- 6 hautement qualifié ',step = 1)
+    Qualification_code = st.number_input('Score qualification de 1 à 6 ( 1 peu qualifié ---- 6 hautement qualifié) ',step = 1)
 
     if st.button('Valider'):
       # Création du dictionnaire des entrées
@@ -359,9 +359,9 @@ def run():
 
       # Affichage du dictionnaire
       data2 = prerun(criteres_choisis,testing_offre,Top_actu_base)
-      st.write(data2.head())
+      st.write(data2.head(20))
       #data2.to_json('test_table_js.json', orient='records')
-      #st.write(data2[["intitule","entreprise.nom","typeContrat","origineOffre.urlOrigine","scoring"]])
+      
 
 
 if __name__ == "__main__":
