@@ -16,7 +16,7 @@ accès Git:
 Mail : projetdataecm@proton.me
 MdP : projetdatactrobien
 
-Pour se connecter sur streamlit un mail vous serez envoyer sur la boite mail Proton, ensuite vous pouvez soit compiler l'application "projetdata ∙ Mayssa ∙ ProjetData.py" ou "projetdata ∙ main ∙ ProjetData.py"
+Pour se connecter sur streamlit un mail vous sera envoyé sur la boite mail Proton, ensuite vous pouvez soit compiler l'application "projetdata ∙ Mayssa ∙ ProjetData.py" ou "projetdata ∙ main ∙ ProjetData.py"
 
 En lançant l'application, vous voyez l'interface que nous avons créé. Nous avons apporté quelques améliorations après la présentation, nous avons introduit plus de champs pour rafiner encore plus la recherche de l'utilisateur. 
 
