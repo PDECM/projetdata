@@ -389,7 +389,7 @@ def run():
       #data2.to_json('test_table_js.json', orient='records')
 
    #Affichage de la position des offres sur une carte
-        data2 = data2.rename(columns={"lieuTravail.longitude": "lon","lieuTravail.latitude": "lat"})
+      data2 = data2.rename(columns={"lieuTravail.longitude": "lon","lieuTravail.latitude": "lat"})
       data3 = data2[['lon','lat']]
         
       st.pydeck_chart(pdk.Deck(
