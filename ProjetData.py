@@ -366,7 +366,7 @@ def run():
       criteres_choisis.append('ValNumExp')
       testing_offre.append((experience)*10**6)
 
-    #Salaire ( optionnel )
+    # Salaire ( optionnel )
       if salaire != 0 :
         criteres_choisis.append('ValNumSalaire')
         testing_offre.append((salaire)*10**2)
@@ -381,14 +381,14 @@ def run():
 
       testing_offre = np.array(testing_offre).reshape(1,-1)
 
-      # Appel au modèle et Récupération de la offres similaires
+    # Appel au modèle et Récupération de la offres similaires
       data2 = prerun(criteres_choisis,testing_offre,Top_actu_base)
 
-    #Affichage de la table avec les 150 offres les plus proches
+    # Affichage de la table avec les 150 offres les plus proches
       st.write(data2)
       #data2.to_json('test_table_js.json', orient='records')
 
-   #Affichage de la position des offres sur une carte
+    # Affichage de la position des offres sur une carte
       data2 = data2.rename(columns={"lieuTravail.longitude": "lon","lieuTravail.latitude": "lat"})
       data3 = data2[['lon','lat']]
         
